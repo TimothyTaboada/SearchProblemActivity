@@ -19,9 +19,9 @@ namespace Labyrinth
         private int playerPosX = 1;
         private int playerPosY = 6;
         private int berisPosX = 20;
-        private int berisPosY = 5;
+        private int berisPosY = 7;
         private int derisPosX = 20;
-        private int derisPosY = 7;
+        private int derisPosY = 5;
 
         public TheGame() => InitializeComponent();
 
