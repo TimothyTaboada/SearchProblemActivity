@@ -12,7 +12,8 @@ namespace Labyrinth
 {
     public partial class TheGame : Form
     {
-        private int[,] mazeWalls;
+        private GameLogic maze;
+        private int[,] mazeCell;
         private int cellSize = 20;
         private int rowDimension = 13;
         private int colDimension = 22;
@@ -27,7 +28,8 @@ namespace Labyrinth
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            this.maze = new GameLogic(this.rowDimension, this.colDimension);
+            this.mazeCell = maze.GetMaze;
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
@@ -36,7 +38,23 @@ namespace Labyrinth
             {
                 for(int x = 0; x < this.colDimension; x++)
                 {
+                    // draw grid
                     graphics.DrawRectangle(new Pen(Color.Black), x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
+                    // draw beris path
+                    if (this.mazeCell[y, x] == 1)
+                    {
+                        graphics.FillRectangle((Brush)new SolidBrush(Color.Pink), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
+                    }
+                    // draw deris path
+                    if (this.mazeCell[y, x] == 2)
+                    {
+                        graphics.FillRectangle((Brush)new SolidBrush(Color.Cyan), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
+                    }
+                    // draw maze walls
+                    if (this.mazeCell[y, x] == 3)
+                    {
+                        graphics.FillRectangle((Brush)new SolidBrush(Color.DarkGray), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
+                    }
                 }
             }
             // draw player
