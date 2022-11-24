@@ -25,6 +25,37 @@ namespace Labyrinth
 
         public int[,] GetMaze => this.maze;
 
+        private bool playerDie(int playerX, int playerY, int berisX, int berisY, int derisX, int derisY)
+        {
+            if(playerX == berisX && playerY == berisY || playerX == derisX && playerY == derisY)
+            {
+                return true;
+            }
+            else return false;
+        }
+
+        private bool playerExit(int playerX, int playerY, int exitX, int exitY)
+        {
+            if(playerX == exitX && playerY == exitY)
+            {
+                return true;
+            }
+            else return false;
+        }
+
+        public int gameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY, int derisX, int derisY)
+        {
+            if (playerExit(playerX, playerY, exitX, exitY))
+            {
+                return 1;
+            }
+            else if (playerDie(playerX, playerY, berisX, berisY, derisX, derisY))
+            {
+                return 2;
+            }
+            else return 0;
+        }
+
         public void initializeMaze()
         {
             for(int y = 0; y < this.rows; y++)
@@ -37,6 +68,7 @@ namespace Labyrinth
                     }
                 }
             }
+            // pain peko
             maze[2, 2] = 3;
             maze[2, 3] = 3;
             maze[2, 4] = 3;
@@ -82,10 +114,8 @@ namespace Labyrinth
             maze[6, 4] = 3;
             maze[6, 5] = 3;
             maze[6, 7] = 3;
-            maze[6, 9] = 3;
             maze[6, 10] = 3;
             maze[6, 11] = 3;
-            maze[6, 12] = 3;
             maze[6, 14] = 3;
             maze[6, 16] = 3;
             maze[6, 17] = 3;

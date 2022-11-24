@@ -23,17 +23,20 @@ namespace Labyrinth
         private int berisPosY = 7;
         private int derisPosX = 20;
         private int derisPosY = 5;
+        private int exitPosX = 20;
+        private int exitPosY = 6;
 
         public TheGame() => InitializeComponent();
 
         private void Form1_Load(object sender, EventArgs e)
         {
             this.maze = new GameLogic(this.rowDimension, this.colDimension);
-            maze.initializeMaze();
+            this.maze.initializeMaze();
             this.mazeCell = maze.GetMaze;
         }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            checkGameStatus();
             Graphics graphics = e.Graphics;
             for(int y = 0; y < this.rowDimension; y++)
             {
@@ -58,6 +61,9 @@ namespace Labyrinth
                     }
                 }
             }
+            // draw exit
+            graphics.FillEllipse((Brush)new SolidBrush(Color.Goldenrod), this.exitPosX * this.cellSize + 1, this.exitPosY * this.cellSize + 1, this.cellSize - 2, this.cellSize - 2);
+            graphics.FillEllipse((Brush)new SolidBrush(Color.Black), this.exitPosX * this.cellSize + 5, this.exitPosY * this.cellSize + 5, this.cellSize - 10, this.cellSize - 10);
             // draw player
             graphics.FillEllipse((Brush)new SolidBrush(Color.Green), this.playerPosX * this.cellSize + 3, this.playerPosY * this.cellSize + 3, this.cellSize - 6, this.cellSize - 6);
             // draw beris
@@ -105,6 +111,47 @@ namespace Labyrinth
         private void buttonWait_Click(object sender, EventArgs e)
         {
             this.Refresh();
+        }
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            this.maze = new GameLogic(this.rowDimension, this.colDimension);
+            this.maze.initializeMaze();
+            this.mazeCell = maze.GetMaze;
+            setControls(true);
+            this.playerPosX = 1;
+            this.playerPosY = 6;
+            this.berisPosX = 20;
+            this.berisPosY = 7;
+            this.derisPosX = 20;
+            this.derisPosY = 5;
+            this.textBox1.Text = "";
+            this.Refresh();
+        }
+
+        private void setControls(bool set)
+        {
+            this.buttonUp.Enabled = set;
+            this.buttonDown.Enabled = set;
+            this.buttonLeft.Enabled = set;
+            this.buttonRight.Enabled = set;
+            this.buttonWait.Enabled = set;
+        }
+
+        private void checkGameStatus()
+        {
+            int status = this.maze.gameStatus(playerPosX, playerPosY, exitPosX, exitPosY, berisPosX, berisPosY, derisPosX, derisPosY);
+            switch (status)
+            {
+                case 1:
+                    this.textBox1.Text = "ESCAPED";
+                    setControls(false);
+                    break;
+                case 2:
+                    this.textBox1.Text = "GAME OVER YEAH!";
+                    setControls(false);
+                    break;
+            }
         }
     }
 }
