@@ -21,9 +21,7 @@ namespace Labyrinth
         private int playerPosX = 1;
         private int playerPosY = 6;
         private int berisPosX = 20;
-        private int berisPosY = 7;
-        private int derisPosX = 20;
-        private int derisPosY = 5;
+        private int berisPosY = 6;
         private int exitPosX = 20;
         private int exitPosY = 6;
 
@@ -50,11 +48,6 @@ namespace Labyrinth
                     {
                         graphics.FillRectangle((Brush)new SolidBrush(Color.Pink), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
                     }
-                    // draw deris path
-                    if (this.mazeCell[y, x] == 10)
-                    {
-                        graphics.FillRectangle((Brush)new SolidBrush(Color.Cyan), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
-                    }
                     // draw maze walls
                     if (this.mazeCell[y, x] == 3)
                     {
@@ -69,8 +62,6 @@ namespace Labyrinth
             graphics.FillEllipse((Brush)new SolidBrush(Color.Green), this.playerPosX * this.cellSize + 3, this.playerPosY * this.cellSize + 3, this.cellSize - 6, this.cellSize - 6);
             // draw beris
             graphics.FillEllipse((Brush)new SolidBrush(Color.Red), this.berisPosX * this.cellSize + 3, this.berisPosY * this.cellSize + 3, this.cellSize - 6, this.cellSize - 6);
-            // draw deris
-            graphics.FillEllipse((Brush)new SolidBrush(Color.Blue), this.derisPosX * this.cellSize + 3, this.derisPosY * this.cellSize + 3, this.cellSize - 6, this.cellSize - 6);
         }
 
         private void buttonUp_Click(object sender, EventArgs e)
@@ -129,8 +120,6 @@ namespace Labyrinth
             this.playerPosY = 6;
             this.berisPosX = 20;
             this.berisPosY = 7;
-            this.derisPosX = 20;
-            this.derisPosY = 5;
             this.textBox1.Text = "";
             this.Refresh();
         }
@@ -167,7 +156,7 @@ namespace Labyrinth
 
         private void CheckGameStatus()
         {
-            int status = this.maze.GameStatus(playerPosX, playerPosY, exitPosX, exitPosY, berisPosX, berisPosY, derisPosX, derisPosY);
+            int status = this.maze.GameStatus(playerPosX, playerPosY, exitPosX, exitPosY, berisPosX, berisPosY);
             switch (status)
             {
                 case 1:

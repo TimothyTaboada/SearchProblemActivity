@@ -29,9 +29,9 @@ namespace Labyrinth
 
         public int[,] GetMaze => this.maze;
 
-        private bool PlayerDie(int playerX, int playerY, int berisX, int berisY, int derisX, int derisY)
+        private bool PlayerDie(int playerX, int playerY, int berisX, int berisY)
         {
-            if(playerX == berisX && playerY == berisY || playerX == derisX && playerY == derisY)
+            if(playerX == berisX && playerY == berisY)
             {
                 return true;
             }
@@ -47,13 +47,13 @@ namespace Labyrinth
             else return false;
         }
 
-        public int GameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY, int derisX, int derisY)
+        public int GameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY)
         {
             if(PlayerExit(playerX, playerY, exitX, exitY))
             {
                 return 1;
             }
-            else if(PlayerDie(playerX, playerY, berisX, berisY, derisX, derisY))
+            else if(PlayerDie(playerX, playerY, berisX, berisY))
             {
                 return 2;
             }
@@ -83,7 +83,6 @@ namespace Labyrinth
             int[] array2 = new int[length];
             int index1 = 0;
             int index2 = 0;
-            //beris
             if(this.GetNodeContent(this.maze, start) != 0)
             {
                 return (int[,])null;
