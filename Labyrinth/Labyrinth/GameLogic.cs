@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +14,7 @@ namespace Labyrinth
         private int[,] maze;
         private int rows;
         private int columns;
+        private int path = 1;
 
         public GameLogic(int rows, int columns)
         {
@@ -25,7 +29,7 @@ namespace Labyrinth
 
         public int[,] GetMaze => this.maze;
 
-        private bool playerDie(int playerX, int playerY, int berisX, int berisY, int derisX, int derisY)
+        private bool PlayerDie(int playerX, int playerY, int berisX, int berisY, int derisX, int derisY)
         {
             if(playerX == berisX && playerY == berisY || playerX == derisX && playerY == derisY)
             {
@@ -34,7 +38,7 @@ namespace Labyrinth
             else return false;
         }
 
-        private bool playerExit(int playerX, int playerY, int exitX, int exitY)
+        private bool PlayerExit(int playerX, int playerY, int exitX, int exitY)
         {
             if(playerX == exitX && playerY == exitY)
             {
@@ -43,20 +47,124 @@ namespace Labyrinth
             else return false;
         }
 
-        public int gameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY, int derisX, int derisY)
+        public int GameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY, int derisX, int derisY)
         {
-            if (playerExit(playerX, playerY, exitX, exitY))
+            if(PlayerExit(playerX, playerY, exitX, exitY))
             {
                 return 1;
             }
-            else if (playerDie(playerX, playerY, berisX, berisY, derisX, derisY))
+            else if(PlayerDie(playerX, playerY, berisX, berisY, derisX, derisY))
             {
                 return 2;
             }
             else return 0;
         }
 
-        public void initializeMaze()
+        private int GetNodeContent(int[,] maze, int nodeNo)
+        {
+            int length = maze.GetLength(1);
+            return maze[nodeNo / length, nodeNo - nodeNo / length * length];
+        }
+
+        private void ChangeNodeContent(int[,] maze, int nodeNo, int newValue)
+        {
+            int length = maze.GetLength(1);
+            maze[nodeNo / length, nodeNo - nodeNo / length * length] = newValue;
+        }
+
+        public int[,] FindPath(int fromX, int fromY, int toX, int toY) => Search(fromY * this.Columns + fromX, toY * this.Columns + toX);
+
+        private int[,] Search(int start, int end)
+        {
+            int sRows = this.rows;
+            int sColumns = this.columns;
+            int length = sRows * sColumns;
+            int[] array1 = new int[length];
+            int[] array2 = new int[length];
+            int index1 = 0;
+            int index2 = 0;
+            //beris
+            if(this.GetNodeContent(this.maze, start) != 0)
+            {
+                return (int[,])null;
+            }
+            int[,] maze1 = new int[sRows, sColumns];
+            for(int maze1X = 0; maze1X < sRows; maze1X++)
+            {
+                for(int maze1Y = 0; maze1Y < sColumns; maze1Y++)
+                {
+                    maze1[maze1X, maze1Y] = 0;
+                }
+            }
+            array1[index2] = start;
+            array2[index2] = -1;
+            for(int index3 = index2 + 1; index1 != index3 && array1[index1] != end; index1++)
+            {
+                int nodeNo1 = array1[index1];
+                // up
+                int nodeNo2 = nodeNo1 - 1;
+                if(nodeNo2 >= 0 && nodeNo2 / sColumns == nodeNo1 / sColumns && this.GetNodeContent(this.maze, nodeNo2) == 0 && this.GetNodeContent(maze1, nodeNo2) == 0)
+                {
+                    array1[index3] = nodeNo2;
+                    array2[index3] = nodeNo1;
+                    this.ChangeNodeContent(maze1, nodeNo2, 1);
+                    index3++;
+                }
+                // down
+                int nodeNo3 = nodeNo1 + 1;
+                if (nodeNo3 < length && nodeNo3 / sColumns == nodeNo1 / sColumns && this.GetNodeContent(this.maze, nodeNo3) == 0 && this.GetNodeContent(maze1, nodeNo3) == 0)
+                {
+                    array1[index3] = nodeNo3;
+                    array2[index3] = nodeNo1;
+                    this.ChangeNodeContent(maze1, nodeNo3, 1);
+                    ++index3;
+                }
+                // left
+                int nodeNo4 = nodeNo1 - sColumns;
+                if (nodeNo4 >= 0 && this.GetNodeContent(this.maze, nodeNo4) == 0 && this.GetNodeContent(maze1, nodeNo4) == 0)
+                {
+                    array1[index3] = nodeNo4;
+                    array2[index3] = nodeNo1;
+                    this.ChangeNodeContent(maze1, nodeNo4, 1);
+                    ++index3;
+                }
+                // right
+                int nodeNo5 = nodeNo1 + sColumns;
+                if (nodeNo5 >= 0 && this.GetNodeContent(this.maze, nodeNo5) == 0 && this.GetNodeContent(maze1, nodeNo5) == 0)
+                {
+                    array1[index3] = nodeNo5;
+                    array2[index3] = nodeNo1;
+                    this.ChangeNodeContent(maze1, nodeNo5, 1);
+                    ++index3;
+                }
+                this.ChangeNodeContent(maze1, nodeNo1, 2);
+            }
+            int[,] maze2 = new int[sRows, sColumns];
+            for(int maze2X = 0; maze2X < sRows; maze2X++)
+            {
+                for(int maze2Y = 0; maze2Y < sColumns; maze2Y++)
+                {
+                    maze2[maze2X, maze2Y] = this.maze[maze2X, maze2Y];
+                }
+            }
+            int nodeNo6 = end;
+            this.ChangeNodeContent(maze2, nodeNo6, this.path);
+            for(int index4 = index1; index4 >= 0; index4--)
+            {
+                if (array1[index4] == nodeNo6)
+                {
+                    nodeNo6 = array2[index4];
+                    if(nodeNo6 == -1)
+                    {
+                        return maze2;
+                    }
+                    this.ChangeNodeContent(maze2, nodeNo6, this.path);
+                }
+            }
+            return (int[,]) null;
+        }
+
+        public void InitializeMaze()
         {
             for(int y = 0; y < this.rows; y++)
             {
