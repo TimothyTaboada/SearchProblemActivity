@@ -140,7 +140,6 @@ namespace Labyrinth
             this.mazeCell = this.maze.GetMaze;
             int[,] path = this.maze.FindPath(this.berisPosX, this.berisPosY, this.playerPosX, this.playerPosY);
             this.mazeCell = path;
-            //this.Refresh();
         }
 
         private void SetControls(bool set)
