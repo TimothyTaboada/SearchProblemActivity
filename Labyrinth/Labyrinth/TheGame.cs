@@ -16,14 +16,15 @@ namespace Labyrinth
         private GameLogic maze;
         private int[,] mazeCell;
         private int cellSize = 20;
-        private int rowDimension = 13;
-        private int colDimension = 22;
-        private int playerPosX = 1;
-        private int playerPosY = 6;
-        private int berisPosX = 20;
-        private int berisPosY = 6;
-        private int exitPosX = 20;
-        private int exitPosY = 6;
+        private int rowDimension = 15;
+        private int colDimension = 24;
+        private int playerPosX = 2;
+        private int playerPosY = 7;
+        private int berisPosX = 21;
+        private int berisPosY = 7;
+        private int exitPosX = 21;
+        private int exitPosY = 7;
+        private int remKeys = 4;
 
         public TheGame() => InitializeComponent();
 
@@ -44,14 +45,19 @@ namespace Labyrinth
                     // draw grid
                     graphics.DrawRectangle(new Pen(Color.Black), x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
                     // draw beris path
-                    if (this.mazeCell[y, x] == 1)
+                    if(this.mazeCell[y, x] == 1)
                     {
                         graphics.FillRectangle((Brush)new SolidBrush(Color.Pink), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
                     }
                     // draw maze walls
-                    if (this.mazeCell[y, x] == 3)
+                    if(this.mazeCell[y, x] == 3)
                     {
                         graphics.FillRectangle((Brush)new SolidBrush(Color.DarkGray), x * this.cellSize + 1, y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1);
+                    }
+                    // draw keys
+                    if (this.mazeCell[y, x] == 4)
+                    {
+                        graphics.FillRectangle((Brush)new SolidBrush(Color.Gold), x * this.cellSize + 6, y * this.cellSize + 3, this.cellSize - 12, this.cellSize - 6);
                     }
                 }
             }
@@ -66,9 +72,11 @@ namespace Labyrinth
 
         private void buttonUp_Click(object sender, EventArgs e)
         {
-            if(this.mazeCell[playerPosY - 1, playerPosX] != 3)
+            if(this.mazeCell[this.playerPosY - 1, this.playerPosX] != 3)
             {
+                this.remKeys = this.maze.CheckKey(this.playerPosX, this.playerPosY - 1, remKeys);
                 this.playerPosY -= 1;
+                this.mazeCell = this.maze.GetMaze;
             }
             this.PlayerAction();
             this.Refresh();
@@ -76,9 +84,11 @@ namespace Labyrinth
 
         private void buttonLeft_Click(object sender, EventArgs e)
         {
-            if(this.mazeCell[playerPosY, playerPosX - 1] != 3)
+            if(this.mazeCell[this.playerPosY, this.playerPosX - 1] != 3)
             {
+                this.remKeys = this.maze.CheckKey(this.playerPosX - 1, this.playerPosY, remKeys);
                 this.playerPosX -= 1;
+                this.mazeCell = this.maze.GetMaze;
             }
             this.PlayerAction();
             this.Refresh();
@@ -86,9 +96,11 @@ namespace Labyrinth
 
         private void buttonRight_Click(object sender, EventArgs e)
         {
-            if(this.mazeCell[playerPosY, playerPosX + 1] != 3)
+            if(this.mazeCell[this.playerPosY, this.playerPosX + 1] != 3)
             {
+                this.remKeys = this.maze.CheckKey(this.playerPosX + 1, this.playerPosY, remKeys);
                 this.playerPosX += 1;
+                this.mazeCell = this.maze.GetMaze;
             }
             this.PlayerAction();
             this.Refresh();
@@ -96,9 +108,11 @@ namespace Labyrinth
 
         private void buttonDown_Click(object sender, EventArgs e)
         {
-            if(this.mazeCell[playerPosY + 1, playerPosX] != 3)
+            if(this.mazeCell[this.playerPosY + 1, this.playerPosX] != 3)
             {
+                this.remKeys = this.maze.CheckKey(this.playerPosX, this.playerPosY + 1, remKeys);
                 this.playerPosY += 1;
+                this.mazeCell = this.maze.GetMaze;
             }
             this.PlayerAction();
             this.Refresh();
@@ -116,10 +130,11 @@ namespace Labyrinth
             this.maze.InitializeMaze();
             this.mazeCell = maze.GetMaze;
             this.SetControls(true);
-            this.playerPosX = 1;
-            this.playerPosY = 6;
-            this.berisPosX = 20;
+            this.playerPosX = 2;
+            this.playerPosY = 7;
+            this.berisPosX = 21;
             this.berisPosY = 7;
+            this.remKeys = 4;
             this.textBox1.Text = "";
             this.Refresh();
         }
@@ -156,14 +171,20 @@ namespace Labyrinth
 
         private void CheckGameStatus()
         {
-            int status = this.maze.GameStatus(playerPosX, playerPosY, exitPosX, exitPosY, berisPosX, berisPosY);
+            int status = this.maze.GameStatus(remKeys, playerPosX, playerPosY, exitPosX, exitPosY, berisPosX, berisPosY);
             switch (status)
             {
+                case 0:
+                    this.textBox1.Text = remKeys + " Keys Remaining";
+                    break;
                 case 1:
                     this.textBox1.Text = "ESCAPED";
                     SetControls(false);
                     break;
                 case 2:
+                    this.textBox1.Text = "Exit Unlocked";
+                    break;
+                case 3:
                     this.textBox1.Text = "GAME OVER YEAH!";
                     SetControls(false);
                     break;

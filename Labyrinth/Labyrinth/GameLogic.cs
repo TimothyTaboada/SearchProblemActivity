@@ -47,17 +47,31 @@ namespace Labyrinth
             else return false;
         }
 
-        public int GameStatus(int playerX, int playerY, int exitX, int exitY, int berisX, int berisY)
+        public int GameStatus(int keys, int playerX, int playerY, int exitX, int exitY, int berisX, int berisY)
         {
-            if(PlayerExit(playerX, playerY, exitX, exitY))
+            if (PlayerExit(playerX, playerY, exitX, exitY) && keys == 0)
             {
                 return 1;
             }
-            else if(PlayerDie(playerX, playerY, berisX, berisY))
+            else if(keys == 0)
             {
                 return 2;
             }
+            else if(PlayerDie(playerX, playerY, berisX, berisY))
+            {
+                return 3;
+            }
             else return 0;
+        }
+
+        public int CheckKey(int x, int y, int keys)
+        {
+            if (this.maze[y, x] == 4)
+            {
+                this.maze[y, x] = 0;
+                keys--;
+            }
+            return keys;
         }
 
         private int GetNodeContent(int[,] maze, int nodeNo)
@@ -169,105 +183,110 @@ namespace Labyrinth
             {
                 for(int x = 0; x < this.columns; x++)
                 {
-                    if(x == 0 || y == 0 || x == this.columns - 1 || y == this.rows - 1)
+                    if(x == 0 || y == 0 || x == 0 + 1 || y == 0 + 1 || x == this.columns - 1 || y == this.rows - 1 || x == this.columns - 2 || y == this.rows - 2)
                     {
                         maze[y, x] = 3;
                     }
                 }
             }
+            // keys
+            maze[1, 16] = 4;
+            maze[7, 10] = 4;
+            maze[7, 13] = 4;
+            maze[13, 7] = 4;
             // pain peko
-            maze[2, 2] = 3;
-            maze[2, 3] = 3;
-            maze[2, 4] = 3;
-            maze[2, 5] = 3;
-            maze[2, 7] = 3;
-            maze[2, 8] = 3;
-            maze[2, 9] = 3;
-            maze[2, 11] = 3;
-            maze[2, 12] = 3;
-            maze[2, 13] = 3;
-            maze[2, 14] = 3;
-            maze[2, 16] = 3;
-            maze[2, 17] = 3;
-            maze[2, 18] = 3;
-            maze[2, 19] = 3;
-            maze[3, 2] = 3;
-            maze[3, 7] = 3;
+            maze[3, 3] = 3;
+            maze[3, 4] = 3;
+            maze[3, 5] = 3;
+            maze[3, 6] = 3;
+            maze[3, 8] = 3;
+            maze[3, 9] = 3;
+            maze[3, 10] = 3;
+            maze[3, 12] = 3;
+            maze[3, 13] = 3;
+            maze[3, 14] = 3;
+            maze[3, 15] = 3;
+            maze[3, 17] = 3;
+            maze[3, 18] = 3;
             maze[3, 19] = 3;
-            maze[4, 2] = 3;
-            maze[4, 4] = 3;
-            maze[4, 5] = 3;
-            maze[4, 7] = 3;
-            maze[4, 9] = 3;
-            maze[4, 10] = 3;
-            maze[4, 11] = 3;
-            maze[4, 12] = 3;
-            maze[4, 14] = 3;
-            maze[4, 16] = 3;
-            maze[4, 17] = 3;
-            maze[4, 19] = 3;
-            maze[5, 2] = 3;
-            maze[5, 4] = 3;
+            maze[3, 20] = 3;
+            maze[4, 3] = 3;
+            maze[4, 8] = 3;
+            maze[4, 20] = 3;
+            maze[5, 3] = 3;
             maze[5, 5] = 3;
-            maze[5, 7] = 3;
-            maze[5, 9] = 3;
+            maze[5, 6] = 3;
+            maze[5, 8] = 3;
             maze[5, 10] = 3;
             maze[5, 11] = 3;
             maze[5, 12] = 3;
-            maze[5, 14] = 3;
-            maze[5, 16] = 3;
+            maze[5, 13] = 3;
+            maze[5, 15] = 3;
             maze[5, 17] = 3;
-            maze[5, 19] = 3;
-            maze[6, 4] = 3;
+            maze[5, 18] = 3;
+            maze[5, 20] = 3;
+            maze[6, 3] = 3;
             maze[6, 5] = 3;
-            maze[6, 7] = 3;
+            maze[6, 6] = 3;
+            maze[6, 8] = 3;
             maze[6, 10] = 3;
             maze[6, 11] = 3;
-            maze[6, 14] = 3;
-            maze[6, 16] = 3;
+            maze[6, 12] = 3;
+            maze[6, 13] = 3;
+            maze[6, 15] = 3;
             maze[6, 17] = 3;
-            maze[7, 2] = 3;
-            maze[7, 4] = 3;
+            maze[6, 18] = 3;
+            maze[6, 20] = 3;
             maze[7, 5] = 3;
-            maze[7, 7] = 3;
-            maze[7, 9] = 3;
-            maze[7, 10] = 3;
+            maze[7, 6] = 3;
+            maze[7, 8] = 3;
             maze[7, 11] = 3;
             maze[7, 12] = 3;
-            maze[7, 14] = 3;
-            maze[7, 16] = 3;
+            maze[7, 15] = 3;
             maze[7, 17] = 3;
-            maze[7, 19] = 3;
-            maze[8, 2] = 3;
-            maze[8, 4] = 3;
+            maze[7, 18] = 3;
+            maze[8, 3] = 3;
             maze[8, 5] = 3;
-            maze[8, 7] = 3;
-            maze[8, 9] = 3;
+            maze[8, 6] = 3;
+            maze[8, 8] = 3;
             maze[8, 10] = 3;
             maze[8, 11] = 3;
             maze[8, 12] = 3;
-            maze[8, 14] = 3;
-            maze[8, 16] = 3;
+            maze[8, 13] = 3;
+            maze[8, 15] = 3;
             maze[8, 17] = 3;
-            maze[8, 19] = 3;
-            maze[9, 2] = 3;
-            maze[9, 14] = 3;
-            maze[9, 19] = 3;
-            maze[10, 2] = 3;
+            maze[8, 18] = 3;
+            maze[8, 20] = 3;
+            maze[9, 3] = 3;
+            maze[9, 5] = 3;
+            maze[9, 6] = 3;
+            maze[9, 8] = 3;
+            maze[9, 10] = 3;
+            maze[9, 11] = 3;
+            maze[9, 12] = 3;
+            maze[9, 13] = 3;
+            maze[9, 15] = 3;
+            maze[9, 17] = 3;
+            maze[9, 18] = 3;
+            maze[9, 20] = 3;
             maze[10, 3] = 3;
-            maze[10, 4] = 3;
-            maze[10, 5] = 3;
-            maze[10, 7] = 3;
-            maze[10, 8] = 3;
-            maze[10, 9] = 3;
-            maze[10, 10] = 3;
-            maze[10, 12] = 3;
-            maze[10, 13] = 3;
-            maze[10, 14] = 3;
-            maze[10, 16] = 3;
-            maze[10, 17] = 3;
-            maze[10, 18] = 3;
-            maze[10, 19] = 3;
+            maze[10, 15] = 3;
+            maze[10, 20] = 3;
+            maze[11, 3] = 3;
+            maze[11, 4] = 3;
+            maze[11, 5] = 3;
+            maze[11, 6] = 3;
+            maze[11, 8] = 3;
+            maze[11, 9] = 3;
+            maze[11, 10] = 3;
+            maze[11, 11] = 3;
+            maze[11, 13] = 3;
+            maze[11, 14] = 3;
+            maze[11, 15] = 3;
+            maze[11, 17] = 3;
+            maze[11, 18] = 3;
+            maze[11, 19] = 3;
+            maze[11, 20] = 3;
         }
     }
 }

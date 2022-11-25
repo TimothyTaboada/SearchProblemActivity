@@ -1,6 +1,6 @@
 # SearchProblemActivity
 ## What is this?
-Basically, I'm tryna recreate the second level of the Labyrinth minigame from [this game](https://threshold.itch.io/monster-girl-dreams), without Beris (the blue circle) and the stage hazards though since I wanna keep it simple (and I'm running out of time).  
+Basically, I'm tryna recreate the second level of the Labyrinth minigame from [this game](https://threshold.itch.io/monster-girl-dreams), without Beris (the blue circle) and the stage hazards though since I wanna keep it simple (and I'm running out of time, and I also don't know how to deal with overlapping cell values).  
 ![Level 2](Pics/Floor2.png)
 
 ## How to implement?
