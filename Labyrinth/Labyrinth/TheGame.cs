@@ -124,7 +124,7 @@ namespace Labyrinth
             this.maze = new GameLogic(this.rowDimension, this.colDimension);
             this.maze.InitializeMaze();
             this.mazeCell = maze.GetMaze;
-            SetControls(true);
+            this.SetControls(true);
             this.playerPosX = 1;
             this.playerPosY = 6;
             this.berisPosX = 20;
@@ -140,6 +140,20 @@ namespace Labyrinth
             this.mazeCell = this.maze.GetMaze;
             int[,] path = this.maze.FindPath(this.berisPosX, this.berisPosY, this.playerPosX, this.playerPosY);
             this.mazeCell = path;
+            this.AiMove();
+        }
+
+        private void AiMove()
+        {
+            this.mazeCell[this.berisPosY, this.berisPosX] = 0;
+            if (this.berisPosX - 1 >= 0 && this.berisPosX - 1 < this.colDimension && this.mazeCell[this.berisPosY, this.berisPosX - 1] == 1)
+                --this.berisPosX;
+            else if (this.berisPosX + 1 >= 0 && this.berisPosX + 1 < this.colDimension && this.mazeCell[this.berisPosY, this.berisPosX + 1] == 1)
+                ++this.berisPosX;
+            else if (this.berisPosY - 1 >= 0 && this.berisPosY - 1 < this.rowDimension && this.mazeCell[this.berisPosY - 1, this.berisPosX] == 1)
+                --this.berisPosY;
+            else if (this.berisPosY + 1 >= 0 && this.berisPosY + 1 < this.rowDimension && this.mazeCell[this.berisPosY + 1, this.berisPosX] == 1)
+                ++this.berisPosY;
         }
 
         private void SetControls(bool set)
